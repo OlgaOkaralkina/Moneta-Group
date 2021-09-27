@@ -1,0 +1,560 @@
+<apex:page controller="ClientOnboardingController" applyBodyTag="false" applyHtmlTag="false" renderAs="pdf"  showHeader="false">
+    <head>
+        <style>
+            @page {
+                size: 1200px;
+                thead {
+                    display: table-header-group;
+                }
+            }
+
+            * {
+                font-family: sans-serif;
+                margin: 0;
+            }
+
+            .pdf-content {
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            td.col-8 {
+                width: 60%;
+                vertical-align: top;
+            }
+
+            td.col-1 {
+                width: 10%;
+                vertical-align: top;
+            }
+
+            td.col-3 {
+                width: 30%;
+                vertical-align: top;
+            }
+
+            .pdf-logo img {
+                width: 300px;
+            }
+
+            .border-line {
+                background: #284254;
+                height: 4px;
+                width: 100%;
+                margin: 0px 0px;
+            }
+
+            .blue-line {
+                background: #284254;
+                height: 15px;
+                width: 100%;
+                margin: 30px 0px;
+                font: 
+            }
+
+            .pdf-title {
+                color: #284254;
+                font-size: 24px;
+                text-align: center;
+                font-family: Futura;
+            }
+
+            .household-title {
+                color: #284254;
+                font-size: 36px;
+                text-align: center;
+                font-family: Futura;
+            }
+
+            .address-line {
+                color: #194f6e;
+                font-size: 14px;
+                margin: 15px 0px 50px;
+            }
+
+            .light-blue-title {
+                color: #15bfff;
+                font-size: 18px;
+            }
+
+            .description-box {
+                color: #576289;
+                font-size: 15px;
+                padding: 30px;
+                border: 1px solid #333;
+                border-radius: 5px;
+                margin: 10px 0px 50px;
+                line-height: 24px;
+            }
+
+            table.job-detail-table {
+                width: 100%;
+                margin: 15px 0px;
+            }
+
+            table.job-detail-table tr th,
+            table.job-detail-table tr td {
+                vertical-align: top;
+                font-weight: bold;
+                padding: 0px 0px;
+                font-family: Futura;
+                
+            }
+
+            table.job-detail-table tr th {
+                color:rgb(54,184,114);
+                font-size: 17px;
+            }
+
+            table.job-detail-table tr td {
+                color: #000000;
+                font-size: 15px;
+                font-family: Futura;
+            }
+
+            table.job-detail-table tr td p {
+                font-weight: normal;
+                padding-bottom: 2px;
+            }
+
+            .dark-blue-text {
+                color: #194f6e;
+            }
+
+            .light-blue-text {
+                color: #15bfff;
+            }
+
+            .total-count {
+                color: #194f6e;
+                font-size: 24px;
+                margin: 10px 0px 0px;
+                font-weight: bold;
+            }
+
+            table.material-table {
+                width: 100%;
+                table-layout: fixed;
+                margin: 5px 0px;
+                -fs-table-paginate: paginate;
+            }
+
+            table.material-table tr th {
+                padding: 2px 0px;
+                font-size: 15px;
+                font-family: Futura;
+            }
+
+            table.material-table tr td {
+                border: none;
+                padding: 2px 0px;
+                font-size: 15px;
+                font-family: Futura;
+            }
+
+            table.material-table tr td.border-none {
+                border: none;
+            }
+
+            table.job-detail-table tr td.email-detail {
+                font-weight: normal;
+            }
+
+            table.signature-table {
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            table.signature-table tr td {
+                width: 100%;
+            }
+
+            .signature-box {
+                height: 100px;
+                width: 90%;
+                border-bottom: 1px solid #c4c4c4;
+            }
+
+            .signature-name {
+                color: #194f6e;
+                font-size: 17px;
+                font-weight: bold;
+                margin-top: 20px;
+            }
+
+            .assignment-id {
+                color: #194f6e;
+                font-size: 20px;
+                margin: 10px 0px 50px;
+            }
+
+            .assignment-id span {
+                font-weight: normal
+            }
+
+            .title-blue {
+                color: #194f6e;
+                font-size: 18px;
+                margin: 10px 0px;
+            }
+
+            .title-blue span {
+                font-weight: normal
+            }
+
+            .info-text {
+                color: #194f6e;
+                font-size: 16px;
+                line-height: 25px;
+            }
+        </style>
+    </head>
+
+    <div class="pdf-container">
+        <table class="material-table" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td class="col-8" >
+                    <div>
+                        <div class="pdf-logo">
+                           <table><tr style="border: none;"><td style="border: none;"><img src="{!$Resource.Logo}" height="75" width="200"/></td>
+                            <td style="border: none;">
+                            </td></tr></table> 
+                        </div>
+                        <div class="blue-line"></div>
+                        <div>
+                            <h1 class="household-title">{!SUBSTITUTE(OnboardRequestWrapperObj.onboardingRequest.Household__r.Name," Household","")}</h1>
+                            <h2 class="pdf-title">Onboarding Request Report</h2>
+                            <br/>
+                        </div>
+                        <table class="job-detail-table"  style="border: none;" width="100%">
+                            <tr style="background-color:#284254;  border: none;">
+                                <th style="border: none;">Household</th>
+                                <th style="border: none;">Client Team</th>
+                                <th style="border: none;">Submitted By</th>
+                                <th style="border: none;">Submitted Date</th>
+                                <th style="border: none;">Due Date</th>
+                                <th style="border: none;">Delivery Preference</th>
+                                <th style="border: none;">Status</th>
+                            </tr>
+                            <tr style="border: none;">
+                                <td style="border: none;">{!OnboardRequestWrapperObj.onboardingRequest.Household__r.Name}</td>
+                                <td style="border: none;">{!OnboardRequestWrapperObj.onboardingRequest.Client_Team__c}</td>
+                                <td style="border: none;">{!OnboardRequestWrapperObj.onboardingRequest.CreatedBy.Name}</td>
+                                <td style="border: none;"><apex:outputField value="{!OnboardRequestWrapperObj.onboardingRequest.CreatedDate}"/></td>
+                                <td style="border: none;"><apex:outputField value="{!OnboardRequestWrapperObj.onboardingRequest.Due_Date__c}"/></td>
+                                <td style="border: none;">{!OnboardRequestWrapperObj.onboardingRequest.Packet_Delivery_Preference__c}</td>
+                                <td style="border: none;"><apex:outputField value="{!OnboardRequestWrapperObj.onboardingRequest.Onboarding_Status__c}"/></td>
+                            </tr>
+                        </table>
+                        <apex:outputPanel rendered="{!OnboardRequestWrapperObj.onboardingRequest.Comments__c != ''|| NOT(ISNULL(OnboardRequestWrapperObj.onboardingRequest.Comments__c))}">
+                            <table class="job-detail-table"  style="border: none;" width="100%">
+                                <tr style="background-color:#284254; border: none;"> 
+                                    <th colspan="7" style="border: none;">Comments</th>
+                                </tr>
+                                <tr style="border: none;">
+                                    <td colspan="7" style="border: none;"><apex:outputField value="{!OnboardRequestWrapperObj.onboardingRequest.Comments__c}" /></td>
+                                </tr>
+                            </table>
+                        </apex:outputPanel> 
+                        
+                        
+                        <apex:repeat value="{!OnboardRequestWrapperObj.obAccounts}" var="account">
+                            
+                            <apex:outputPanel rendered="{!account.RecordType.Name == 'New Account'}">
+                                <div class="border-line"></div>
+                                <h1 class="pdf-title">New Account: {!SUBSTITUTE(account.Account_Type__c,"_"," ")} / {!SUBSTITUTE(account.Account_Sub_Type__c,"_"," ")}</h1>
+                                <table class="material-table"  style="border: none;" width="100%">
+                                    <tr style="background-color:rgb(224, 226, 224); border: none;">
+                                        <th width="20%" style="border: none;">Account Title</th>
+                                        <th width="25%" style="border: none;">Custodian</th>
+                                        <th width="10%" style="border: none;">Plan Name</th>
+                                        <th width="10%" style="border: none;">Billable</th>
+                                        <th width="15%" style="border: none;">Billing Account</th>
+                                        <th width="10%" style="border: none;">Discretion </th>
+                                        <th width="10%" style="border: none;">Moneta Managed</th>
+                                   </tr>
+                                    <tr style="border: none;">
+                                        <td style="border: none;">{!account.Name}</td>
+                                        <td style="border: none;">{!account.Custodian__c} {!account.Other_Custodian__c}</td>
+                                        <td style="border: none;">{!account.Plan_Name__c}</td>
+                                        <td style="border: none;"><apex:outputField value="{!account.Billable__c}"/></td>
+                                        <td style="border: none;">{!account.Billing_Account__c}</td>
+                                        <td style="border: none;"><apex:outputField value="{!account.Discretionary__c}"/></td>
+                                        <td style="border: none;"><apex:outputField value="{!account.Moneta_Managed__c}"/></td>
+                                    </tr>
+                                </table>
+                                <table class="material-table"  style="border: none;" width="100%">
+                                    <tr style="background-color:rgb(224, 226, 224); border: none;">
+                                        <th width="20%" style="border: none;">Funding Method</th>
+                                        <th width="20%" style="border: none;">Account Owner</th>
+                                        <th width="20%" style="border: none;">Account Name</th>
+                                        <th width="20%" style="border: none;">Account Number</th>
+                                    </tr>
+                                    <tr style="border: none;"> 
+                                        <td style="border: none;">{!account.Funding_Method__c}</td>
+                                        <td style="border: none;">{!account.Account_Owner__r.Name}</td>
+                                        <td style="border: none;">{!account.Funding_Account_Name__c}</td>
+                                        <td style="border: none;">{!account.Funding_Account_Number__c}</td>
+                                    </tr>
+                                </table>
+                                
+                                <apex:outputPanel rendered="{!AND(account.Additional_Requests__c != '', account.Additional_Requests__c != null)}">
+                                    <table class="material-table"  style="border: none;" width="100%">
+                                    <tr style="border: none;">
+                                        <th width="20%" style="border: none;">Additional Forms</th>
+                                        <td width="80%" style="border: none;">{!account.Additional_Requests__c}</td>
+                                    </tr>
+                                    </table>
+                                   </apex:outputPanel>
+                                   <apex:outputPanel rendered="{!AND(account.Money_Movement__c != '', account.Money_Movement__c != null)}">
+                                    <table class="material-table"  style="border: none;" width="100%">
+                                    <tr style="border: none;">
+                                        <th width="20%" style="border: none;">Money Movement</th>
+                                        <td  width="80%" style="border: none;">{!account.Money_Movement__c}</td>
+                                    </tr>
+                                    </table>
+                                   </apex:outputPanel>
+                                   <apex:outputPanel rendered="{!AND(account.Journal_Instructions__c != '', account.Journal_Instructions__c != null)}">
+                                    <table class="material-table"  style="border: none;" width="100%">
+                                    <tr style="border: none;">
+                                        <th width="20%" style="border: none;">Journal Instructions</th>
+                                        <td  width="80%" style="border: none;">{!account.Journal_Instructions__c}</td>
+                                    </tr>
+                                    </table>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!AND(account.Check_Instructions__c != '', account.Check_Instructions__c != null)}">
+                                    <table class="material-table"  style="border: none;" width="100%">
+                                        <tr style="border: none;">
+                                            <th width="20%" style="border: none;">Check Instructions</th>
+                                            <td  width="80%" style="border: none;">{!account.Check_Instructions__c}</td>
+                                        </tr>
+                                    </table>
+                                    </apex:outputPanel>
+                                    <apex:outputPanel rendered="{!AND(account.ACH_Instructions__c != '', account.ACH_Instructions__c != null)}">
+                                    <table class="material-table"  style="border: none;" width="100%">    
+                                        <tr style="border: none;">
+                                            <th width="20%" style="border: none;">ACH Instructions</th>
+                                            <td   width="80%" style="border: none;">{!account.ACH_Instructions__c}</td>
+                                        </tr>
+                                    </table>
+                                    </apex:outputPanel>
+                                  
+                                            <table class="material-table"  style="border: none;" width="100%">
+                                                <tr style="background-color:rgb(224, 226, 224); border: none;">
+                                                    <th width="15%" style="border: none;">Trustees / Beneficiaries</th>
+                                                    <th width="15%" style="border: none;">First or Trust Name</th>
+                                                    <th width="15%" style="border: none;">Last Name</th>
+                                                    <th width="15%" style="border: none;">Relationship</th>
+                                                    <th width="15%" style="border: none;">Percentage</th>
+                                                    <th width="15%" style="border: none;">SSN</th>
+                                                    <th width="10%" style="border: none;">Date of Birth</th>
+                                                </tr>
+                                            </table>
+                                                <apex:repeat value="{!OnboardRequestWrapperObj.trustees}" var="trustee">
+                                                    <apex:outputPanel rendered="{!account.Id == trustee.OB_Account__r.Id}">  
+                                                        <table class="material-table"  style="border: none;" width="100%">  
+                                                        <tr> 
+                                                        <td width="15%" style="border: none;"></td>
+                                                        <td width="15%" style="border: none;">{!trustee.Beneficiary_Trustee_Contact_in_SF__r.FirstName}{!trustee.First_or_Trust_Name__c}</td>
+                                                        <td width="15%" style="border: none;">{!trustee.Beneficiary_Trustee_Contact_in_SF__r.LastName}{!trustee.Last_Name__c}</td>
+                                                        <td width="15%" style="border: none;">{!trustee.Relationship__c}</td>
+                                                        <td width="15%" style="border: none;">{!trustee.Percentage__c}%</td>
+                                                        <td width="15%" style="border: none;">{!trustee.SSN__c}</td>
+                                                        <td width="10%" style="border: none;"><apex:outputField value="{!trustee.Date_of_Birth__c}" /></td>
+                                                        </tr> 
+                                                        </table>
+                                                   </apex:outputPanel>  
+                                                </apex:repeat>
+                                   
+                            </apex:outputPanel>
+                        </apex:repeat>
+                        <br/>
+                        <br/>
+                        
+                        <apex:repeat value="{!OnboardRequestWrapperObj.obAccounts}" var="account">
+                            
+                            <apex:outputPanel rendered="{!account.RecordType.Name != 'New Account'}">
+                                <div class="border-line"></div>
+                                <h1 class="pdf-title">Existing Account: {!SUBSTITUTE(account.Account_Type__c,"_"," ")} / {!SUBSTITUTE(account.Account_Sub_Type__c,"_"," ")}</h1>
+                                <table class="material-table"  style="border: none;" width="100%">
+                                    <tr style="background-color:rgb(224, 226, 224); border: none;">
+                                        <th width="15%" style="border: none;">Account Type</th>
+                                        <th width="15%" style="border: none;">Account Title</th>
+                                        <th width="15%" style="border: none;">Custodian</th>
+                                        <th width="10%" style="border: none;">Plan Name</th>
+                                        <th width="10%" style="border: none;">Billable</th>
+                                        <th width="10%" style="border: none;">Billing Account</th>
+                                        
+                                        <th width="10%" style="border: none;">Discresion</th>
+                                        <th width="10%" style="border: none;">Moneta Managed</th>
+                                   </tr>
+                                    <tr style="border: none;">
+                                        <td style="border: none;">{!SUBSTITUTE(account.Account_Type__c,"_"," ")} / {!SUBSTITUTE(account.Account_Sub_Type__c,"_"," ")}</td>
+                                        <td style="border: none;">{!account.Name}</td>
+                                        <td style="border: none;">{!account.Custodian__c} {!account.Other_Custodian__c}</td>
+                                        <td style="border: none;">{!account.Plan_Name__c}</td>
+                                        <td style="border: none;"><apex:outputField value="{!account.Billable__c}"/></td>
+                                        <td style="border: none;">{!account.Billing_Account__c}</td>
+                                        <td style="border: none;"><apex:outputField value="{!account.Discretionary__c}"/></td>
+                                        <td style="border: none;"><apex:outputField value="{!account.Moneta_Managed__c}"/></td>
+                                    </tr>
+                                    </table>
+                                    <table class="material-table"  style="border: none;" width="100%">
+                                        <tr style="background-color:rgb(224, 226, 224); border: none;">
+                                            <th width="15%" style="border: none;">Linking Method</th>
+                                            <th width="15%" style="border: none;">Account Number</th>
+                                            <th width="15%" style="border: none;">Registration</th>
+                                            <th width="10%" style="border: none;">Remove RIA?</th>
+                                            <th width="10%" style="border: none;">Retirement Account?</th>
+                                            <th width="35%" style="border: none;">Account URL</th>
+                                       </tr>
+                                        <tr style="border: none;">
+                                            <td style="border: none;">{!account.Linking_Method__c}</td>
+                                            <td style="border: none;">{!account.Account_Number__c}</td>
+                                            <td style="border: none;">{!account.Registration__c}</td>
+                                            <td style="border: none;"><apex:outputField value="{!account.Remove_RIA__c}"/></td>
+                                            <td style="border: none;"><apex:outputField value="{!account.Retirement_Account__c}"/></td>
+                                            <td style="border: none;">{!account.Account_URL__c}</td>
+                                        </tr>
+                                        </table>
+                                        <apex:outputPanel rendered="{!AND(account.Additional_Requests__c != '', account.Additional_Requests__c != null)}">
+                                            <table class="material-table"  style="border: none;" width="100%">
+                                            <tr style="border: none;">
+                                                <th width="20%" style="border: none;">Additional Forms</th>
+                                                <td width="80%" style="border: none;">{!account.Additional_Requests__c}</td>
+                                            </tr>
+                                            </table>
+                                           </apex:outputPanel>
+                                           <apex:outputPanel rendered="{!AND(account.Money_Movement__c != '', account.Money_Movement__c != null)}">
+                                            <table class="material-table"  style="border: none;" width="100%">
+                                            <tr style="border: none;">
+                                                <th width="20%" style="border: none;">Money Movement</th>
+                                                <td  width="80%" style="border: none;">{!account.Money_Movement__c}</td>
+                                            </tr>
+                                            </table>
+                                           </apex:outputPanel>
+                                           <apex:outputPanel rendered="{!AND(account.Journal_Instructions__c != '', account.Journal_Instructions__c != null)}">
+                                            <table class="material-table"  style="border: none;" width="100%">
+                                            <tr style="border: none;">
+                                                <th width="20%" style="border: none;">Journal Instructions</th>
+                                                <td  width="80%" style="border: none;">{!account.Journal_Instructions__c}</td>
+                                            </tr>
+                                            </table>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!AND(account.Check_Instructions__c != '', account.Check_Instructions__c != null)}">
+                                            <table class="material-table"  style="border: none;" width="100%">
+                                                <tr style="border: none;">
+                                                    <th width="20%" style="border: none;">Check Instructions</th>
+                                                    <td  width="80%" style="border: none;">{!account.Check_Instructions__c}</td>
+                                                </tr>
+                                            </table>
+                                            </apex:outputPanel>
+                                            <apex:outputPanel rendered="{!AND(account.ACH_Instructions__c != '', account.ACH_Instructions__c != null)}">
+                                            <table class="material-table"  style="border: none;" width="100%">    
+                                                <tr style="border: none;">
+                                                    <th width="20%" style="border: none;">ACH Instructions</th>
+                                                    <td   width="80%" style="border: none;">{!account.ACH_Instructions__c}</td>
+                                                </tr>
+                                            </table>
+                                            </apex:outputPanel>
+                            </apex:outputPanel>
+                        </apex:repeat>
+                        <div class="border-line"></div>
+                        <!--<p class="address-line">123 Apple Street, Atlanta, GA 54321, (888) 555-1234</p>-->
+                   <!--
+                        <p class="address-line">{!ticketWrapperObj.ticket.Client_Location__r.BillingStreet}, {!ticketWrapperObj.ticket.Client_Location__r.BillingCity},
+                            {!ticketWrapperObj.ticket.Client_Location__r.BillingState}, {!ticketWrapperObj.ticket.Client_Location__r.BillingCountry}
+                        </p>
+                        <h2 class="light-blue-title">DESCRIPTION</h2>
+                        <div class="description-box">
+                            {!ticketWrapperObj.ticket.Description__c}
+                        </div>
+                        <apex:repeat value="{!ticketWrapperObj.MyInvoice}" var="inv1">
+
+                            <table class="material-table" cellspacing="0" cellpadding="0" border="1" width="800">
+                                <tr>
+                                    <td width="15%" align="center">
+                                        <p class="dark-blue-text">
+                                            Line No.
+                                        </p>
+                                    </td>
+                                    <td width="40%">
+                                        <p class="dark-blue-text">
+                                            Description
+                                        </p>
+                                    </td>
+                                    <td width="15%"  align="center">
+                                        <p class="dark-blue-text">
+                                            Quantity
+                                        </p>
+                                    </td>
+                                    <td width="15%" align="center">
+                                        <p class="dark-blue-text">
+                                            Unit Price
+                                        </p>
+                                    </td>
+                                    <td width="15%" align="center">
+                                        <p class="dark-blue-text">
+                                            Amount
+                                        </p>
+                                    </td>
+
+                                </tr>
+                                <apex:repeat value="{!inv1.Tech_Invoice_Lines__r}" var="invLines">
+                                    <tr>
+                                        <td width="15%" align="center">
+                                            <p class="dark-blue-text">
+                                                <apex:outputField value="{!invLines.Line_No__c}"></apex:outputField>
+                                            </p>
+                                        </td>
+                                        <td width="40%">
+                                            <p class="dark-blue-text">
+                                                <apex:outputField value="{!invLines.Description__c}"></apex:outputField>
+                                            </p>
+                                        </td>
+                                        <td width="15%"  align="center">
+                                            <p class="dark-blue-text">
+                                                <apex:outputField value="{!invLines.Quantity__c}"></apex:outputField>
+                                            </p>
+                                        </td>
+                                        <td width="15%" align="right">
+                                            <p class="dark-blue-text">
+                                                <apex:outputField value="{!invLines.Unit_Price__c}"></apex:outputField>
+                                            </p>
+                                        </td>
+                                        <td width="15%" align="right">
+                                            <p class="dark-blue-text">
+                                                <apex:outputField value="{!invLines.Amount__c}"></apex:outputField>
+                                            </p>
+                                        </td>
+
+                                    </tr>
+                                </apex:repeat>
+
+                                <tr>
+                                    <td colspan="4" align="right" valign="center">
+                                              <h2 class="total-count">TOTAL AMOUNT</h2>
+                                    </td>
+                                    <td  align="right"  valign="center">
+                                        <p class="total-count">{!inv1.Amount__c}</p>
+                                    </td>
+
+                                </tr>
+                            </table>
+
+                            <div class="border-line"></div>
+
+                        </apex:repeat>
+                    -->
+
+                    </div>
+                </td>
+                
+            </tr>
+        </table>
+
+
+
+
+    </div>
+</apex:page>

@@ -1,0 +1,163 @@
+<apex:page standardController="Checks_Paperwork__c" extensions="DownloadDepositSlipController" renderAs="pdf" applyBodyTag="false" standardStylesheets="false">
+    <head>
+        <style>
+            @page {
+            @top-center {
+            content: element(header);
+            }
+            margin:6em 2em 3em; 
+            }            
+            *{margin:0;padding:0;box-sizing:border-box;font-size:15px;font-family:SansSerif;}
+            div.header {position: running(header);margin-top:20px;}
+            .header{border-bottom:10px solid #284254;}
+            .page-title{color:#00b050;font-size:28px;text-align:center;padding:20px 0px 5px;}
+            .blueBg{background:#284254;height:40px;margin-bottom:8px;}
+            .inner-title{color:#00b050;font-size:18px;text-decoration:underline;font-weight:bold;}
+            .deposit-slip-table tr th, th b{font-size:18px;}
+            .deposit-slip-table tr th, .deposit-slip-table tr td{padding:3px 0px;font-weight:normal;}
+            hr{height:5px;background:#a5a5a5;border:none;margin:4px 0px;}
+            .deposite-info{margin:10px 0px;line-height:24px;}
+            .red-text{color:red;font-weight:bold;}
+            .deposite-info span.red-text{font-weight:normal;}
+            .page-break-before{page-break-before:always;}
+            .page-break-after{page-break-after:always;}
+            table.table-head-rpt{-fs-table-paginate: paginate;}
+            .table-head-rpt tr th, .table-head-rpt tr td{border:1px solid #000;padding:4px 10px;font-size:15px;}
+            .table-head-rpt tr th b{font-size:15px;}
+        </style>
+    </head>    
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+
+    <apex:pageMessages id="showmsg"></apex:pageMessages>
+    <!-- Check/Paperwork List of CheckBatch -->
+  
+    <apex:outputPanel rendered="{! NOT(hasTypeOfItemCheck)}"> 
+        <div class="header">
+            <img src="{!$Resource.MonetaLogo}" width="130" />
+        </div>  
+        <h2 style="color:red;">
+            Content not available as Type of Item is not "Check".
+        </h2>
+    </apex:outputPanel>
+        
+    <!-- Check/Paperwork Details --> 
+        <apex:repeat value="{!checkPaperworkListWithItemTypeCheck}" var="checksPaperwork">
+            <div class="page-break-before">
+                <div class="header">
+                    <table style="width:100%">
+                        <tr width="100%">
+                            <td width="50%" align="left"><img src="{!$Resource.MonetaLogo}" width="130" /></td>
+                            <td width="50%" align="right">
+                                <table style="width:100%">
+                                    <tr width="100%">
+                                        <td width="30%" align="right"><b>Team:</b></td>
+                                        <td width="70%" align="left">{!checksPaperwork.Team__c}</td>
+                                    </tr>
+                                    <tr width="100%">
+                                        <td width="30%" align="right"><b>Household:</b></td>
+                                        <td width="70%" align="left">{!checksPaperwork.Household__r.Name}</td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <h1 class="page-title">Check Deposit Slip</h1>
+                <div class="blueBg"></div>               
+                <table cellspacing="0" cellpadding="0" border="0" width="100%" class="deposit-slip-table">
+                    <tr>
+                        <th width="65%"><b>Check Process Date:</b>
+                            <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                <apex:param value="{!checksPaperwork.Processed_Date__c}" /> 
+                            </apex:outputText>
+                        </th>
+                        <th><b>Delivery Method:</b>{!checksPaperwork.Delivery_Service__c}</th>
+                        <!--<th><b>Batch Id:</b>{!checksPaperwork.Batch_ID__r.Name}</th>-->                  
+                    </tr>
+                    <tr>
+                        <th width="65%"><b>Received Date:</b>
+                            <apex:outputText value="{0, date, MMMM d','  yyyy}">
+                                <apex:param value="{!checksPaperwork.Received_Date__c}" /> 
+                            </apex:outputText>
+                        </th>
+                        <th><b>Check/Paperwork ID:</b> {!checksPaperwork.Name}</th>                        
+                    </tr>
+                    <!--<tr>
+                        <td></td>
+                       
+                    </tr>-->
+                    <tr><td colspan="2"><hr /></td></tr>
+                    <tr>
+                        <td colspan="2">
+                            <b>Recipient</b>:
+                            {!if (!ISBLANK(checksPaperwork.Recipient__r.Name), 
+                            checksPaperwork.Recipient__r.Name, checksPaperwork.Recipient_Other__c) }
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="2">
+                            <b>Payable To:</b> {!checksPaperwork.Payable_To__c}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <b>Address:</b> {!checksPaperwork.Address__c}
+                        </td>
+                    </tr>
+                    <tr><td colspan="2"><hr /></td></tr>
+                    <tr>
+                        <td colspan="2"><b>Check Amount (Total):</b> {!checksPaperwork.Check_Amount__c}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><b>Check Number:</b> {!checksPaperwork.Check_Number__c}</td>
+                    </tr>        
+                    <tr><td colspan="2"><hr /></td></tr>                       
+                    <apex:outputPanel rendered="{! Not( ischeckPaperworkIdToDepositAccountsMapEmpty ) }">
+                        <apex:variable value="{!checkPaperworkIdToDepositAccountsMap[checksPaperwork.Id]}" var="list" />
+                        <apex:outputPanel rendered="{!list.size > 0}">                            
+                            <tr><td colspan="2" class="inner-title">Account(s) to Deposit to:</td></tr>        
+                            <apex:repeat value="{!checkPaperworkIdToDepositAccountsMap[checksPaperwork.Id]}" var="depositAccount">
+                                <tr>
+                                    <td colspan="2">
+                                        <b>Account</b>: 
+                                        {!if (!ISBLANK(depositAccount.Financial_Account__r.Name), 
+                                        depositAccount.Financial_Account__r.Name, depositAccount.Financial_Account_Other__c) }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <b>Account Name</b>:
+                                        {!if (!ISBLANK(depositAccount.Account_Name__c), 
+                                        depositAccount.Account_Name__c, depositAccount.Account_Name_Other__c) }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><b>Amount:</b> {!depositAccount.Amount_Deposited__c}</td>
+                                </tr>
+                                <br/>                
+                            </apex:repeat>
+                            <tr><td colspan="2"><hr /></td></tr>
+                        </apex:outputPanel>  
+                    </apex:outputPanel>        
+                    <tr>
+                        <td colspan="2">
+                            <div  class="deposite-info">                    
+                                Please deposit the attached check in the amount of $<span class="red-text">{!checksPaperwork.Check_Amount__c}</span> as directed above. If you
+                                have any questions, please contact <span class="red-text">{!checksPaperwork.Contact_Person__r.Name}</span> at <span class="red-text">{!checksPaperwork.Contact_Person_Phone_Number__c}
+                                </span> number.
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><b>Additional Comments:</b> 
+                            <span class="deposite-info">{!checksPaperwork.Additional_Comments_for_deposit_slip__c}</span>
+                        </td>
+                    </tr>
+                    <tr><td colspan="2"><hr /></td></tr>
+
+                </table>   
+            </div>
+        </apex:repeat> 
+    
+</apex:page>

@@ -1,0 +1,256 @@
+<apex:page controller="EngagementAgreementController" applyBodyTag="false" applyHtmlTag="false" renderAs="PDF"  showHeader="false">
+    <head>
+        <style>
+            @page {
+                size: 1200px;
+                thead {
+                    display: table-header-group;
+                }
+            }
+
+            * {
+                font-family: sans-serif;
+                margin: 0;
+            }
+
+            .pdf-content {
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            td.col-8 {
+                width: 60%;
+                vertical-align: top;
+            }
+
+            td.col-1 {
+                width: 10%;
+                vertical-align: top;
+            }
+
+            td.col-3 {
+                width: 30%;
+                vertical-align: top;
+            }
+
+            .pdf-logo img {
+                width: 300px;
+            }
+
+            .border-line {
+                background: #c4c4c4;
+                height: 1px;
+                width: 100%;
+                margin: 30px 0px;
+            }
+
+            .pdf-title {
+                color: #194f6e;
+                font-size: 22px;
+            }
+
+            .address-line {
+                color: #194f6e;
+                font-size: 14px;
+                margin: 15px 0px 50px;
+            }
+
+            .light-blue-title {
+                color: #15bfff;
+                font-size: 18px;
+            }
+
+            .description-box {
+                color: #576289;
+                font-size: 15px;
+                padding: 30px;
+                border: 1px solid #333;
+                border-radius: 5px;
+                margin: 10px 0px 50px;
+                line-height: 24px;
+            }
+
+            table.job-detail-table {
+                width: 100%;
+                margin: 15px 0px;
+            }
+
+            table.job-detail-table tr th,
+            table.job-detail-table tr td {
+                vertical-align: top;
+                font-weight: bold;
+                padding: 12px 0px;
+            }
+
+            table.job-detail-table tr th {
+                color: #194f6e;
+                font-size: 17px;
+            }
+
+            table.job-detail-table tr td {
+                color: #5f5f5f;
+                font-size: 15px;
+            }
+
+            table.job-detail-table tr td p {
+                font-weight: normal;
+                padding-bottom: 10px;
+                l
+            }
+
+            .dark-blue-text {
+                color: #194f6e;
+            }
+
+            .light-blue-text {
+                color: #15bfff;
+            }
+
+            .total-count {
+                color: #194f6e;
+                font-size: 24px;
+                margin: 10px 0px 0px;
+                font-weight: bold;
+            }
+
+            table.material-table {
+                width: 100%;
+                table-layout: fixed;
+                margin: 15px 0px;
+                -fs-table-paginate: paginate;
+            }
+
+            table.material-table tr th {
+                padding: 10px 5px;
+                font-size: 15px;
+            }
+
+            table.material-table tr td {
+                border: 1px solid #707070;
+                padding: 10px 5px;
+                font-size: 15px;
+            }
+
+            table.material-table tr td.border-none {
+                border: none;
+            }
+
+            table.job-detail-table tr td.email-detail {
+                font-weight: normal;
+            }
+
+            table.signature-table {
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            table.signature-table tr td {
+                width: 100%;
+            }
+
+            .signature-box {
+                height: 100px;
+                width: 90%;
+                border-bottom: 1px solid #c4c4c4;
+            }
+
+            .signature-name {
+                color: #194f6e;
+                font-size: 17px;
+                font-weight: bold;
+                margin-top: 20px;
+            }
+
+            .assignment-id {
+                color: #194f6e;
+                font-size: 20px;
+                margin: 10px 0px 50px;
+            }
+
+            .assignment-id span {
+                font-weight: normal
+            }
+
+            .title-blue {
+                color: #194f6e;
+                font-size: 18px;
+                margin: 10px 0px;
+            }
+
+            .title-blue span {
+                font-weight: normal
+            }
+
+            .info-text {
+                color: #194f6e;
+                font-size: 16px;
+                line-height: 25px;
+            }
+        </style>
+    </head>
+
+    <div class="pdf-container">
+        <table class="material-table" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+                <td class="col-8">
+                    <div>
+                        <div class="pdf-logo">
+                           <table><tr style="border: none;"><td style="border: none;"><img src="{!$Resource.Logo}" height="50" width="50"/></td>
+                            <td style="border: none;"><h1 >Engagement Agreement</h1>
+                            </td></tr></table> 
+                        </div>
+                        <div class="border-line"></div>
+                    </div>  
+                </td>
+                
+            </tr>
+        </table>
+        <apex:pageBlock >
+            <apex:panelGrid columns="1" style="table-layout: fixed" width="100%">
+            <apex:pageBlockSection columns="1">
+                <table style="width:100%">   
+                    <tr><td><h2>Onboarding Agreement</h2></td></tr>             
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Name}"  style="width:100% !important;"  /></td></tr>  
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Household__c}" /></td></tr>  
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Client_Team__c}" /></td></tr>
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Due_Date__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Onboarding_Status__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Packet_Delivery_Preference__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Partner_split_client__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Processor_Assigned__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Send_EA_ADV__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Comments__c}" /></td></tr> 
+                    <tr><td><div class="border-line"></div></td></tr> 
+                    <tr><td><h2>Engagement Agreement Information</h2></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Agreement_is_for__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Legal_Name_of_Entity__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Legal_Name_s_of_Individual_s_Signing__c}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Entity_s_Auth_Signor_s_w_Titles__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Type_of_Agreement__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Robo_Type__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Accounts_Outside_of_Robo_Platform__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Discr__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Additional_Services_to_be_Provided__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Fee_Schedule__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Negotiated_Fee_Schedule__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Minimum_Annual_Fee__c}" /></td></tr> 
+             <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Negotiated_Minimum_Annual_Fee__c}" /></td></tr> 
+             <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Is_HH_aggregated_with_any_other_HH_s__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Household_Name_s_and_ID_s__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Each_HH_Responsible_for_their_own_fees__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.If_No_provide_HH_Name_Resp_for_all_fees__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Signing_Pertner_s_Name__c}" /></td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Additional_Comments__c}" /></td></tr> 
+            <tr><td> <div class="border-line"></div></td></tr> 
+            <tr><td><h2>Additional Details</h2>          </td></tr> 
+            <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.Household_ID__c}" /></td></tr> 
+                <tr><td><apex:outputField label="Created By" value="{!onboardRequestWrapperObj.onboardingRequest.CreatedBy.Name}" /></td></tr> 
+                    <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.CreatedDate}" /></td></tr> 
+                        <tr><td><apex:outputField value="{!onboardRequestWrapperObj.onboardingRequest.LastModifiedById}" /></td></tr> 
+        
+        </table>
+        </apex:pageBlockSection>
+            </apex:panelGrid>
+        </apex:pageBlock>
+    </div>
+</apex:page>

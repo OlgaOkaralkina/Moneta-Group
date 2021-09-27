@@ -1,0 +1,81 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:hasRecordId,force:lightningQuickAction" access="global" controller="ProjectBuilderController">
+    <ltng:require styles="{!$Resource.jqueryUI + '/jquery-ui-1.12.1.custom/jquery-ui.min.css'}"
+        scripts="{!join(',', $Resource.jquery_341, $Resource.jqueryUI + '/jquery-ui-1.12.1.custom/jquery-ui.min.js')}"
+        afterScriptsLoaded="{!c.loadScript}" />
+    
+    <aura:dependency resource="markup://force:navigateToURL" type="EVENT"/>
+    <lightning:navigation aura:id="navService" />
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+    <!-- <aura:attribute name="recordId" type="Id" /> -->
+    <aura:attribute name="url" type="String"/>
+    <aura:attribute name="pageReference" type="Object"/>
+    <aura:attribute name="projects" type="ProjectByObAccountId[]" />
+    <aura:attribute name="loading" type="Boolean" default="false" />
+    <aura:attribute name="done" type="Boolean" default="false"/>
+    <aura:attribute name="newProjectUrl" type="String"/>
+    <aura:attribute name="hasError" type="Boolean" default="false"/>
+    <aura:attribute name="error" type="String"/>
+
+    <!-- '{!v.recordId}' -->
+    <div class="slds-page-header slds-page-header_object-home">
+        <lightning:layout>
+            <lightning:layoutItem class="slds-m-left_small">
+                <h1 class="slds-page-header__title slds-p-right_x-small">Project Selector</h1>
+            </lightning:layoutItem>
+        </lightning:layout>
+    </div>
+
+    <div>
+        <ul aria-describedby="instructions" id="project-list"
+            class="slds-border_top slds-border_right slds-border_bottom slds-border_left" >
+            <li aria-selected="false" class="slds-p-around_x-small slds-m-bottom_x-small non-sortable slds-grid slds-border_bottom" role="header" tabindex="-1">
+                <span class="slds-col slds-size_3-of-4" >
+                    <span class="slds-text-heading_small slds-col slds-size_1-of-12 slds-p-right_x-small">Master</span>
+                    <!-- <span class="slds-text-heading_medium slds-p-right_small">
+                        <input type="radio" id="{!'master' + pr.Id}" name="master" checked="{!i == 0 ? 'true' : 'false'}" /></span> -->
+                        <!-- <ui:inputRadio aura:id="master" name="master" /></span> -->
+                </span>
+                <span class="slds-col slds-size_1-of-4">
+                    <!-- <span class="slds-text-heading_medium slds-p-right_x-small">
+                        <input type="checkbox" id="{!'check' + pr.Id}" checked="true" /></span> -->
+                </span>
+            </li>
+            <aura:iteration items="{!v.projects}" var="pr" indexVar="i">
+                <li aria-selected="false" class="slds-p-around_x-small slds-m-around_x-small slds-grid" role="option" tabindex="-1">
+                    <span class="slds-col slds-size_3-of-4" >
+                        <span class="slds-text-heading_small slds-col slds-size_1-of-12 slds-p-right_x-small">
+                            <span aria-hidden="true" class="slds-text-heading_medium slds-p-right_small">⋮</span>
+                            <span class="slds-text-heading_medium slds-p-right_small">
+                                <input type="radio" id="{!'master' + pr.Project.Id}" name="master" checked="{!i == 0 ? 'true' : 'false'}" /></span>
+                        </span>
+                        {!pr.Project.Name}
+                    </span>
+                    <span class="slds-col slds-size_1-of-4">
+                        <input type="checkbox" id="{!'check' + pr.Project.Id}" data-ob-account-id="{!pr.ObAccountId}" checked="true" /></span>
+                        <!-- <ui:inputRadio aura:id="master" name="master" /></span> -->
+                </li>
+                </aura:iteration>
+        </ul>
+    </div>
+    <div class="slds-m-top_medium">
+        <a class="slds-button slds-button_neutral" href="{!v.url}">Cancel</a>
+        <aura:if isTrue="{! v.loading }">
+            <div class="spinner-wrapper">
+                <lightning:spinner alternativeText="Loading" size="small" />
+            </div>
+        </aura:if>
+        <aura:if isTrue="{! and(not(v.loading), not(v.done), not(v.hasError)) }">
+            <lightning:button class="slds-m-left_x-small" variant="brand" onclick="{!c.okClick}" name="Create" label="Create" />
+        </aura:if>
+        <aura:if isTrue="{! v.done }">
+            <a class="slds-m-left_x-small" href="{! v.newProjectUrl }" >Link to new project</a>
+            <span class="slds-m-left_x-small">Your project is being created, this process may take up to 5 mins to complete.</span>
+        </aura:if>
+        <aura:if isTrue="{! v.hasError }">
+            <span class="slds-m-left_x-small">{! v.error }</span>
+        </aura:if>
+    </div>
+    
+</aura:component>

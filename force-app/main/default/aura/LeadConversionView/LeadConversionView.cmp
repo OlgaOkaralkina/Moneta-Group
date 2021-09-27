@@ -1,0 +1,9 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    <aura:attribute name="LeadFields" type="String[]" default="ConvertedOpportunityId"/>
+    <lightning:card iconName="custom:custom19" title="Converted Records">
+        <div class="slds-p-left_large slds-p-right_medium">	
+            <lightning:recordForm  recordId="{!v.recordId}"
+        mode="view" objectApiName="Lead" fields="{!v.LeadFields}"/>
+        </div>
+    </lightning:card>
+</aura:component>

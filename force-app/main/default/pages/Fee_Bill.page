@@ -1,0 +1,3 @@
+<apex:page standardController="Account" extensions="FeeBillController" action="{!init}">
+
+</apex:page>

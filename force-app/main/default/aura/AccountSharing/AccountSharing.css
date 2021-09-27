@@ -1,0 +1,76 @@
+.THIS .custom-box {    
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+}
+
+.THIS .slds-spinner_container {
+    position:fixed!important;
+}
+
+.THIS .close-button {
+    line-height: unset !important;
+}
+
+.THIS svg.slds-icon.slds-icon-text-default.slds-icon_x-small {
+    fill: white!important;
+}
+
+.THIS .slds-truncate {
+    white-space: normal!important;
+    overflow-wrap: break-word!important;
+    word-wrap: break-word!important;
+}
+
+.THIS .slds-button_icon-bare {
+    display: none;
+}
+
+.THIS .slds-col.slds-size_12-of-12.slds-p-horizontal_small.slds-p-vertical_xx-small {
+    padding-top: 20px;
+}
+
+.THIS .permission-container {
+    /*padding: 15px;*/
+}
+
+.THIS .query_list {
+    padding-top: 10px;
+}
+
+.THIS .access-level__container {
+    padding-top: 10px;
+}
+
+.THIS .error-container {
+    background-color: #9c0707;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    border-radius: 7px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.THIS .success-container {
+    background-color: #079c48;
+    padding: 10px;
+    border-radius: 7px;
+    margin-left: 12px;
+    margin-right: 12px;
+}
+
+.THIS .action-icon {
+    background-color: #cbcacc;
+}
+
+.THIS .header-row {
+    line-height: 2.25;
+}
+
+.THIS .table-border {
+    border-left: 1px solid rgb(221, 219, 218);
+    border-right: 1px solid rgb(221, 219, 218);
+}

@@ -1,0 +1,259 @@
+<aura:component implements="force:appHostable,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickActionWithoutHeader"  
+                controller="AccountSharingController"
+                access="global" >
+    
+    <!--attribute-->
+    <aura:attribute name="accessOptions" type="String[]"/>
+    <aura:attribute name="userShareIds" type="String[]"/>
+    <aura:attribute name="userSelectionOptions" type="String[]"/>
+    <aura:attribute name="userList" type="String[]"/>
+    <aura:attribute name="selectedUserIds" type="List" default="[]"/>
+    <aura:attribute name="userType" type="String"/>
+    <aura:attribute name="accessType" type="String"/> 
+    <aura:attribute name="errorMessage" type="String"/>
+    <aura:attribute name="selectedRowsId" type="String" />   
+    <aura:attribute name="successMessage" type="String"/>
+    <aura:attribute name="searchSection" type="Boolean" default="true"/>
+    <aura:attribute name="productsSection" type="Boolean" default="true"/>
+    <aura:attribute name="isSobject" type="boolean" default="false"/>    
+    <aura:attribute name="isAccessShow" type="boolean" default="false"/>
+    <aura:attribute name="data" type="Object"/>
+    <aura:attribute name="columns" type="List"/>
+    <aura:attribute name="isShowSpinner" type="boolean" default="true"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <!-- /attribute-->   
+    
+    <!--Style-->
+    <aura:html tag="style">
+        .slds-modal__container {
+            width: 100%!important;
+            max-width: 60rem!important;
+        }
+        .slds-modal__content {
+            max-height: 450px!important;
+            height: 450px!important;
+        }
+    </aura:html>
+    <!--/Style-->
+    
+    <aura:If isTrue="{!v.isShowSpinner}">
+        <lightning:spinner alternativeText="Loading" variant="brand"/>
+    </aura:If>
+    
+    <!--body markup-->
+    <div class="demo-only">
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Account Sharing</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                    <aura:if isTrue="{!!empty(v.errorMessage)}">
+                        <div class="error-container">
+                            <span style="color: white;">
+                                <lightning:formattedText value="{!v.errorMessage}"/>
+                            </span>
+                            <div style="float: right;">
+                                <lightning:button class="close-button" variant="bare" onclick="{!c.hideErrorMessage}">
+                                    <lightning:icon iconName="utility:close" size="x-small"/>
+                                </lightning:button>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <aura:if isTrue="{!!empty(v.successMessage)}">
+                        <div class="success-container">
+                            <span style="color: white;">{!v.successMessage}</span>
+                            <div style="float: right;">
+                                <lightning:button class="close-button" variant="bare" onclick="{!c.hideSuccessMessage}">
+                                    <lightning:icon iconName="utility:close" size="x-small"/>
+                                </lightning:button>
+                            </div>
+                        </div>
+                    </aura:if>
+                    <div class="slds-col slds-size_12-of-12 slds-p-horizontal_small slds-p-vertical_xx-small">
+                        <lightning:button ariaLabel="searchSection" iconName="{!v.searchSection?'utility:chevrondown':'utility:chevronright'}" 
+                                          variant="bare" label="View/Edit Current Permissions" 
+                                          class="section-header slds-button section-header-button slds-section__title-action" 
+                                          name="View/Edit Current Permissions" onclick="{!c.sectionClick}"/>
+                    </div>
+                    
+                    <aura:if isTrue="{!v.searchSection}">
+                        <div style="padding-left: 12px;padding-right: 12px;padding-top: 12px;">
+                            <div class="search-accounts__section">
+                                <table class="slds-table slds-table--bordered slds-table--cell-buffer table-border" role="grid">      
+                                    <thead>
+                                        <tr class="slds-text-title--caps header-row">
+                                            <th scope="col" width="150px">
+                                                <div class="slds-truncate" title="Actions">Actions</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Name">USER OR GROUP</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Thickness">TYPE</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Thickness">NAME</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Thickness">ACCESS LEVEL</div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="slds-truncate" title="Thickness">REASON</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody style="overflow-y: auto;height: 250px;max-height: 250px;">
+                                        <aura:iteration items="{!v.data}" var="dataValue">
+                                            <tr>
+                                                <th scope="row">
+                                                    <aura:if isTrue="{!and(and(dataValue.AccountAccessLevel != 'None', dataValue.RowCause != 'Owner'), dataValue.RowCause != 'Rule')}">
+                                                        <div class="slds-truncate">
+                                                            <lightning:buttonIcon size="x-small" ariaLabel="{!'Read ' + dataValue.Id + ' '+dataValue.UserOrGroup.Id}" iconName="utility:mark_all_as_read" variant="container" alternativeText="Read" class="action-icon" onclick="{!c.giveReadtAccess}"/>
+                                                            <lightning:buttonIcon size="x-small" ariaLabel="{!'Edit ' + dataValue.Id + ' '+dataValue.UserOrGroup.Id}" iconName="utility:edit_form" variant="container" alternativeText="Read/Write" class="action-icon" onclick="{!c.giveEditAccess}"/>
+                                                            <lightning:buttonIcon size="x-small" ariaLabel="{!dataValue.Id + ' '+dataValue.UserOrGroup.Id}" iconName="utility:delete" variant="container" alternativeText="Delete" class="action-icon" onclick="{!c.removeAccess}"/>
+                                                        </div>
+                                                    </aura:if>  
+                                                </th>
+                                                <th scope="row">
+                                                    <aura:if isTrue="{!dataValue.RowCause == 'Rule'}">
+                                                        <div class="slds-truncate">
+                                                            Rule
+                                                        </div>
+                                                        <aura:set attribute="else">
+                                                            <aura:if isTrue="{!or(dataValue.UserOrGroup.Type == 'User', dataValue.UserOrGroup.Type == 'Owner')}">
+                                                                <div class="slds-truncate">
+                                                                    User
+                                                                </div>
+                                                                <aura:set attribute="else">
+                                                                    Group
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </aura:set>
+                                                    </aura:if>
+                                                    
+                                                    <!--
+                                                    <div class="slds-truncate">
+                                                        {!dataValue.UserOrGroup.Type}
+                                                    </div>-->
+                                                </th>
+                                                 <th scope="row">
+                                                     <aura:if isTrue="{!or(dataValue.UserOrGroup.Type == 'User', dataValue.UserOrGroup.Type == 'Owner')}">
+                                                         <div class="slds-truncate">
+                                                             Standard
+                                                         </div>
+                                                         <aura:set attribute="else">
+                                                             Regular
+                                                         </aura:set>
+                                                     </aura:if>
+                                                     
+                                                </th>
+                                                 <th scope="row">
+                                                    <div class="slds-truncate">
+                                                        <a id="{!dataValue.UserOrGroupId}" onclick="{!c.redirectOnUserRecord}">
+                                                            {!dataValue.UserOrGroup.Name}
+                                                        </a>
+                                                    </div>
+                                                </th>
+                                                 <th scope="row">
+                                                     <aura:if isTrue="{!dataValue.AccountAccessLevel == 'All'}">
+                                                         <div class="slds-truncate">
+                                                             All
+                                                         </div>
+                                                         <aura:set attribute="else">
+                                                             <div class="slds-truncate">
+                                                                 {!dataValue.ContactAccessLevel}                                                            
+                                                             </div>                                                             
+                                                         </aura:set>
+                                                     </aura:if>                                                    
+                                                </th>
+                                                 <th scope="row">
+                                                    <div class="slds-truncate">
+                                                        {!dataValue.RowCause}
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </aura:iteration>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        
+                    </aura:if>
+                    
+                    <div class="slds-col slds-size_12-of-12 slds-p-horizontal_small slds-p-vertical_xx-small">
+                        <lightning:button ariaLabel="productsSection" iconName="{!v.productsSection?'utility:chevrondown':'utility:chevronright'}"
+                                          variant="bare" label="Add New Permission" 
+                                          class="section-header slds-button section-header-button slds-section__title-action" 
+                                          name="Add New Permission" onclick="{!c.sectionClick}"/>
+                    </div>
+                    <aura:if isTrue="{!v.productsSection}">
+                        <div class="permission-container">
+                            <lightning:layout>
+                                <div class="slds-has-flexi-truncate slds-p-horizontal_medium">    
+                                    <lightning:layoutItem flexibility="auto" padding="around-small">
+                                        <lightning:select aura:id="userOptionId" value="" onchange="{!c.changeUserType}" 
+                                                          name="picklist" label="Select User/Group/Role: " required = "true">
+                                            <option value="">-- None --</option>
+                                            <aura:iteration items="{!v.userSelectionOptions}" var="selectVal">
+                                                <option value="{!selectVal.value}" text="{!selectVal.label}"></option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </lightning:layoutItem>
+                                </div>
+                                <aura:if isTrue="{!v.isAccessShow}">
+                                    <div class="slds-has-flexi-truncate slds-p-horizontal_medium">    
+                                        <lightning:layoutItem flexibility="auto" padding="around-small">
+                                            <lightning:select aura:id="accessOptionId" value="" onchange="{!c.getSharingAccessType}" 
+                                                              name="picklist" label="Access: " required = "true">
+                                                <option value="">-- None --</option>
+                                                <aura:iteration items="{!v.accessOptions}" var="access">
+                                                    <option value="{!access.value}" text="{!access.label}"></option>
+                                                </aura:iteration>
+                                            </lightning:select>
+                                        </lightning:layoutItem>
+                                    </div>                
+                                </aura:if>
+                            </lightning:layout>
+                            
+                            <lightning:layout>
+                                <div class="slds-has-flexi-truncate slds-p-horizontal_medium">    
+                                    <lightning:layoutItem flexibility="auto" padding="around-small">
+                                        <aura:if isTrue="{!v.isSobject}">
+                                            <lightning:dualListbox aura:id="selectOptions"  name="Skills"
+                                                                   label= "Select Users:" 
+                                                                   sourceLabel="Available" 
+                                                                   selectedLabel="Chosen"
+                                                                   options="{!v.userList}"
+                                                                   value="{!v.selectedUserIds}"
+                                                                   onchange="{! c.addSelectedUsers }"
+                                                                   required = "true"/>
+                                        </aura:if>
+                                    </lightning:layoutItem>
+                                </div>
+                                
+                            </lightning:layout>
+                        </div>
+                    </aura:if>
+                </div>
+                <div class="slds-modal__footer">
+                    <div  class="slds-m-top_medium slds-m-left--xx-large slds-m-around--xxx-small" >    
+                        <aura:if isTrue="{!v.isAccessShow}">
+                            <div>
+                                <lightning:button class="slds-button slds-button_neutral" onclick="{!c.closeModal}">Close</lightning:button>
+                                <lightning:button class="slds-button slds-button_brand" onclick="{!c.shareAccess}">Share</lightning:button>                            
+                            </div>
+                            <aura:set attribute="else">
+                                <div>
+                                    <lightning:button class="slds-button slds-button_neutral" onclick="{!c.closeModal}">Close</lightning:button>
+                                </div>                                
+                            </aura:set>                            
+                        </aura:if>                        
+                    </div> 
+                </div>
+            </div>
+        </section>
+    </div>
+</aura:component>
