@@ -47,14 +47,6 @@ private class ProjectBuilderControllerTest {
 
         CopyTemplateAttachmentsHelper.createFeedItem(pts[0].Id);
         
-        List<Task> tasks = new List<Task> {
-            new Task(Subject = pts[1].Name, inspire1__Inspire_Task__c = pts[1].Id),
-            new Task(Subject = pts[2].Name, inspire1__Inspire_Task__c = pts[2].Id),
-            new Task(Subject = pts[4].Name, inspire1__Inspire_Task__c = pts[4].Id),
-            new Task(Subject = pts[5].Name, inspire1__Inspire_Task__c = pts[5].Id)
-        };
-        insert tasks;
-        
         Account acc = new Account(Name = 'Test account #1');
         insert acc;
 
@@ -69,8 +61,8 @@ private class ProjectBuilderControllerTest {
         insert obr;
 
         List<OB_Account__c> obas = new List<OB_Account__c> {
-            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No'),
-            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No')
+            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check'),
+            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check')
         };
         insert obas;
     
@@ -110,14 +102,6 @@ private class ProjectBuilderControllerTest {
 
         CopyTemplateAttachmentsHelper.createFeedItem(pts[0].Id);
         
-        List<Task> tasks = new List<Task> {
-            new Task(Subject = pts[1].Name, inspire1__Inspire_Task__c = pts[1].Id),
-            new Task(Subject = pts[2].Name, inspire1__Inspire_Task__c = pts[2].Id),
-            new Task(Subject = pts[4].Name, inspire1__Inspire_Task__c = pts[4].Id),
-            new Task(Subject = pts[5].Name, inspire1__Inspire_Task__c = pts[5].Id)
-        };
-        insert tasks;
-        
         Account acc = new Account(Name = 'Test account #1');
         insert acc;
 
@@ -132,8 +116,8 @@ private class ProjectBuilderControllerTest {
         insert obr;
 
         List<OB_Account__c> obas = new List<OB_Account__c> {
-            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No'),
-            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No')
+            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check'),
+            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check')
         };
         insert obas;
     
@@ -202,8 +186,8 @@ private class ProjectBuilderControllerTest {
         insert obr;
 
         List<OB_Account__c> obas = new List<OB_Account__c> {
-            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No'),
-            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No')
+            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check'),
+            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check')
         };
         insert obas;
     
@@ -243,8 +227,8 @@ private class ProjectBuilderControllerTest {
         insert obr;
 
         List<OB_Account__c> obas = new List<OB_Account__c> {
-            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No'),
-            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No')
+            new OB_Account__c(Account_Type__c = 'IRA', Custodian__c = 'Schwab', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check'),
+            new OB_Account__c(Account_Type__c = 'Trust', Custodian__c = 'Fidelity', Onboarding_Request__c = obr.Id, Beneficiary_to_Be_Added_Updated__c = 'No', Funding_Method__c = 'Check')
         };
         insert obas;
         
